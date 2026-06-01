@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asincrono — Prenotazioni dirette per strutture in Campania</title>
+  <meta name="description" content="Il sistema di prenotazione diretta che funziona. 0% di commissioni, sito su misura, go-live in 30 giorni." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── FONTS ────────────────────────────────────────── */
+    @font-face {
+      font-family: 'TASA Orbiter Display';
+      src: url('fonts/TASAOrbiterDisplay-Regular.woff2') format('woff2');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'TASA Orbiter Display';
+      src: url('fonts/TASAOrbiterDisplay-Medium.woff2') format('woff2');
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'TASA Orbiter Display';
+      src: url('fonts/TASAOrbiterDisplay-SemiBold.woff2') format('woff2');
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'TASA Orbiter Display';
+      src: url('fonts/TASAOrbiterDisplay-Bold.woff2') format('woff2');
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+
+    /* ── TOKENS ───────────────────────────────────────── */
+    :root {
+      --neutral-50:  #fffefb;
+      --neutral-100: #fcfbf7;
+      --neutral-200: #faf8f4;
+      --neutral-300: #e6e5e1;
+      --neutral-400: #c8c6c4;
+      --neutral-500: #918e8d;
+      --neutral-600: #7b7878;
+      --neutral-700: #656262;
+      --neutral-900: #231f20;
+
+      --accent:     #27b657;
+      --accent-200: #b9f8cf;
+      --accent-700: #0b883f;
+      --yellow:     #cec939;
+      --blue:       #5b92ca;
+      --red:        #ef5757;
+
+      --bg:           var(--neutral-50);
+      --bg-elevated:  var(--neutral-100);
+      --bg-sunken:    var(--neutral-200);
+      --bg-inverse:   var(--neutral-900);
+      --fg:           var(--neutral-900);
+      --fg-muted:     var(--neutral-500);
+      --fg-subtle:    #231f2073;
+      --fg-inverse:   var(--neutral-50);
+      --border:       var(--neutral-300);
+      --border-faint: #231f200f;
+
+      --font-display: 'TASA Orbiter Display', ui-sans-serif, system-ui, sans-serif;
+      --font-fraunces: 'Fraunces', serif;
+
+      --radius: .625rem;
+      --ease-out: cubic-bezier(.16,1,.3,1);
+      --ease-spring: cubic-bezier(.34,1.56,.64,1);
+    }
+
+    /* ── RESET ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: -.01em;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font: inherit; border: none; background: none; }
+
+    /* ── LAYOUT ───────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ── GRID BG ──────────────────────────────────────── */
+    .grid-bg {
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, #231f2012 1px, transparent 1px),
+        linear-gradient(#231f2012 1px, transparent 1px);
+      background-size: 56px 56px;
+      position: absolute;
+      inset: 0;
+      -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000 50%, transparent 100%);
+      mask-image:         radial-gradient(70% 60% at 50% 30%, #000 50%, transparent 100%);
+    }
+
+    /* ── BUTTONS ──────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      letter-spacing: -.01em;
+      transition: background .15s, opacity .15s, transform .1s;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--neutral-50);
+      box-shadow: 0 0 0 1px var(--accent-200), 0 1px 2px #231f200f;
+    }
+    .btn-primary:hover { background: #27b657db; }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-ghost {
+      background: var(--neutral-50);
+      color: var(--neutral-700);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--neutral-100); }
+    .btn-md { border-radius: 8px; height: 40px; padding: 0 18px; font-size: 14px; }
+    .btn-lg { border-radius: 10px; height: 52px; padding: 0 26px; font-size: 16px; }
+
+    /* ── NAV ──────────────────────────────────────────── */
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #fffefbc7;
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-faint);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      gap: 14px;
+    }
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--fg);
+      letter-spacing: -.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav-links a {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--neutral-700);
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-cta { display: flex; }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      background: var(--bg);
+      padding: 80px 0 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-inner { position: relative; z-index: 2; }
+
+    .eyebrow-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #fcfbf7b3;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px 6px 10px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: var(--font-display);
+      letter-spacing: -.005em;
+    }
+    .live-dot {
+      flex-shrink: 0;
+      width: 8px;
+      height: 8px;
+      position: relative;
+    }
+    .live-dot::before, .live-dot::after {
+      content: '';
+      background: var(--accent);
+      border-radius: 999px;
+      position: absolute;
+      inset: 0;
+    }
+    .live-dot::before {
+      animation: lp-ping 1.6s var(--ease-spring) infinite;
+      opacity: .5;
+    }
+    @keyframes lp-ping {
+      0%   { opacity: .5; transform: scale(1); }
+      70%  { opacity: 0;  transform: scale(2.8); }
+      100% { opacity: 0;  transform: scale(2.8); }
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      margin-top: 56px;
+    }
+    .stat-cell { padding: 8px 24px; }
+    .stat-cell:first-child { padding-left: 0; }
+    .stat-cell:last-child  { padding-right: 0; }
+    .stat-divider {
+      background: var(--border);
+      width: 1px;
+      margin: 12px 0;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(72px, 10vw, 148px);
+      font-weight: 600;
+      letter-spacing: -.045em;
+      line-height: .92;
+      color: var(--neutral-900);
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+      font-feature-settings: "lnum" on, "tnum" on;
+    }
+    .stat-num.zero, .stat-num.zero .num-val { color: var(--accent); }
+    .stat-num .num-val {
+      font-family: var(--font-fraunces);
+      color: var(--neutral-900);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .stat-num .pct {
+      font-family: var(--font-fraunces);
+      color: var(--neutral-500);
+      align-self: flex-end;
+      margin-bottom: .18em;
+      margin-left: .04em;
+      font-size: .38em;
+      font-style: italic;
+      font-weight: 400;
+    }
+    .stat-num .sup {
+      font-family: var(--font-display);
+      color: var(--neutral-500);
+      align-self: flex-start;
+      margin-top: .18em;
+      font-size: .28em;
+      font-weight: 400;
+      letter-spacing: -.01em;
+    }
+    .stat-label {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--neutral-900);
+      margin-top: 12px;
+    }
+    .stat-sub {
+      font-size: 13px;
+      color: var(--neutral-500);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4.6vw, 60px);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.05;
+      text-wrap: balance;
+      max-width: 860px;
+      margin: 40px 0 0;
+    }
+    .hero-headline .ed {
+      font-family: var(--font-fraunces);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .hero-lede {
+      font-size: 18px;
+      color: var(--neutral-700);
+      max-width: 560px;
+      margin: 18px 0 0;
+      line-height: 1.5;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .micro-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--fg-muted);
+      font-size: 12px;
+      margin-top: 14px;
+    }
+
+    /* ── SECTIONS ─────────────────────────────────────── */
+    section { padding: 96px 0; }
+
+    .section-eyebrow {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 50px);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.05;
+      text-wrap: balance;
+      max-width: 820px;
+      margin: 14px 0 0;
+    }
+    .section-title .ed {
+      font-family: var(--font-fraunces);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .section-lede {
+      font-size: 17px;
+      color: var(--neutral-700);
+      max-width: 600px;
+      margin: 16px 0 0;
+      line-height: 1.55;
+    }
+
+    /* ── PROBLEM / BA ─────────────────────────────────── */
+    .problem { padding: 96px 0; border-top: 1px solid var(--border); }
+
+    .ba-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 0;
+      margin-top: 56px;
+    }
+    .ba-card {
+      background: var(--neutral-50);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      min-height: 400px;
+      padding: 28px;
+    }
+    .ba-card.before {
+      background: var(--neutral-200);
+      color: var(--neutral-700);
+      position: relative;
+    }
+    .ba-tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+      margin-bottom: 16px;
+    }
+    .ba-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--neutral-900);
+      margin-bottom: 20px;
+    }
+    .ba-card.before .ba-title { color: var(--neutral-700); }
+
+    .ba-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ba-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .bullet-icon { flex-shrink: 0; margin-top: 1px; }
+    .bullet-icon.x { color: var(--red); }
+    .bullet-icon.ok { color: var(--accent); }
+
+    .ba-receipt {
+      margin-top: auto;
+      background: var(--neutral-900);
+      color: var(--neutral-50);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .ba-receipt.clean {
+      background: var(--neutral-900);
+    }
+    .ba-receipt .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      padding: 5px 0;
+      border-bottom: 1px solid #ffffff14;
+    }
+    .ba-receipt .row:last-child { border-bottom: none; }
+    .ba-receipt .row.total .val { font-weight: 700; font-size: 16px; }
+    .ba-receipt .row .lbl { color: #fffefb8c; }
+    .ba-receipt .row .val { color: var(--neutral-50); }
+    .ba-receipt .row .val.neg { color: var(--red); }
+    .ba-receipt .row .val.pos { color: var(--accent); }
+    .ba-receipt-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #fffefb60;
+      margin-bottom: 12px;
+    }
+    .spam-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ef575720;
+      color: var(--red);
+      border: 1px solid #ef575730;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #27b65720;
+      color: var(--accent);
+      border: 1px solid #27b65730;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .ba-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+      gap: 8px;
+      color: var(--neutral-400);
+      font-size: 20px;
+    }
+
+    /* ── PILLARS ──────────────────────────────────────── */
+    .pillars-section { padding: 96px 0; border-top: 1px solid var(--border); }
+    .pillar {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      align-items: center;
+      gap: 64px;
+      padding: 72px 0;
+      border-top: 1px solid var(--border);
+    }
+    .pillar:first-child { border-top: none; padding-top: 28px; }
+    .pillar.reverse { direction: rtl; }
+    .pillar.reverse > * { direction: ltr; }
+
+    .pillar-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 14px;
+    }
+    .pillar h3 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.8vw, 34px);
+      font-weight: 600;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .pillar h3 .ed {
+      font-family: var(--font-fraunces);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .pillar p {
+      font-size: 16px;
+      color: var(--neutral-700);
+      line-height: 1.6;
+      max-width: 440px;
+    }
+
+    .pillar-visual {
+      background: var(--neutral-100);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .pv-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+      margin-bottom: 4px;
+    }
+    .pv-metric {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      color: var(--neutral-900);
+    }
+    .pv-metric .ed {
+      font-family: var(--font-fraunces);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .pv-metric .accent { color: var(--accent); }
+    .pv-sub { font-size: 13px; color: var(--neutral-500); }
+
+    .pv-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--neutral-50);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+    }
+    .pv-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .pv-dot.green { background: var(--accent); }
+    .pv-dot.yellow { background: var(--yellow); }
+    .pv-dot.blue { background: var(--blue); }
+    .pv-item span { color: var(--neutral-700); }
+    .pv-item strong { color: var(--neutral-900); margin-left: auto; font-weight: 600; }
+
+    /* ── PORTFOLIO ────────────────────────────────────── */
+    .portfolio-section { padding: 96px 0; border-top: 1px solid var(--border); }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .portfolio-card {
+      background: var(--neutral-100);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color .2s;
+    }
+    .portfolio-card:hover { border-color: var(--neutral-400); }
+    .portfolio-card h3 {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -.015em;
+      color: var(--neutral-900);
+    }
+    .portfolio-url {
+      font-size: 12px;
+      color: var(--accent-700);
+      font-weight: 500;
+      letter-spacing: .01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .portfolio-url:hover { color: var(--accent); }
+    .portfolio-loc { font-size: 12px; color: var(--neutral-500); }
+    .portfolio-proof { font-size: 14px; color: var(--neutral-700); line-height: 1.5; margin-top: 4px; }
+    .portfolio-type {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      background: var(--neutral-200);
+      color: var(--neutral-600);
+      border-radius: 6px;
+      padding: 3px 8px;
+      margin-top: 4px;
+    }
+
+    /* ── PRICING ──────────────────────────────────────── */
+    .pricing-section { padding: 96px 0; border-top: 1px solid var(--border); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .price-card {
+      background: var(--neutral-100);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .price-card.featured {
+      background: var(--neutral-900);
+      border-color: var(--neutral-900);
+    }
+    .price-name {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+      margin-bottom: 8px;
+    }
+    .price-card.featured .price-name { color: #fffefb60; }
+    .price-amount {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      color: var(--neutral-900);
+      line-height: 1;
+    }
+    .price-card.featured .price-amount { color: var(--neutral-50); }
+    .price-cadence {
+      font-size: 14px;
+      color: var(--neutral-500);
+      margin-top: 2px;
+      margin-bottom: 24px;
+    }
+    .price-card.featured .price-cadence { color: #fffefb60; }
+    .price-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 20px;
+    }
+    .price-card.featured .price-divider { background: #ffffff14; }
+    .price-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .price-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--neutral-700);
+    }
+    .price-card.featured .price-features li { color: #fffefbbb; }
+    .price-features li .check { color: var(--accent); flex-shrink: 0; }
+    .price-features li .dash { color: var(--neutral-400); flex-shrink: 0; }
+    .price-features li.muted { color: var(--neutral-400); }
+    .price-guarantee {
+      font-size: 13px;
+      color: var(--accent);
+      font-style: italic;
+      font-family: var(--font-fraunces);
+      margin-top: 20px;
+      line-height: 1.4;
+    }
+    .price-cta { margin-top: 24px; width: 100%; justify-content: center; }
+    .price-note {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--neutral-500);
+      text-align: center;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    /* ── DATABAND (dark) ──────────────────────────────── */
+    .databand {
+      background: var(--neutral-900);
+      color: var(--neutral-50);
+      padding: 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .databand .grid-bg {
+      background-image:
+        linear-gradient(90deg, #fffefb0d 1px, transparent 1px),
+        linear-gradient(#fffefb0d 1px, transparent 1px);
+      background-size: 48px 48px;
+      -webkit-mask-image: radial-gradient(80% 60%, #000 30%, transparent 80%);
+      mask-image:         radial-gradient(80% 60%, #000 30%, transparent 80%);
+    }
+    .databand-inner { position: relative; z-index: 2; }
+    .databand .section-eyebrow { color: #fffefb8c; }
+    .databand .section-title { color: var(--neutral-50); max-width: 700px; }
+    .databand .section-lede { color: #fffefbaa; }
+    .databand-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 56px;
+      border-top: 1px solid #ffffff14;
+    }
+    .databand-stat {
+      padding: 32px 0;
+      padding-right: 48px;
+      border-right: 1px solid #ffffff14;
+    }
+    .databand-stat:last-child { border-right: none; padding-right: 0; }
+    .databand-stat + .databand-stat { padding-left: 48px; }
+    .ds-num {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -.04em;
+      color: var(--neutral-50);
+      line-height: 1;
+    }
+    .ds-num .ed {
+      font-family: var(--font-fraunces);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .ds-num .accent { color: var(--accent); }
+    .ds-label { font-size: 14px; font-weight: 500; color: var(--neutral-50); margin-top: 10px; }
+    .ds-sub { font-size: 13px; color: #fffefb70; margin-top: 4px; }
+
+    /* ── FAQ ──────────────────────────────────────────── */
+    .faq-section { padding: 96px 0; border-top: 1px solid var(--border); }
+    .faq-list { margin-top: 48px; border-top: 1px solid var(--border); }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 0;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--fg);
+      text-align: left;
+      letter-spacing: -.01em;
+      cursor: pointer;
+    }
+    .faq-ic {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: var(--neutral-200);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--neutral-600);
+      transition: transform .25s var(--ease-out), background .15s;
+    }
+    .faq-item.open .faq-ic { transform: rotate(45deg); background: var(--neutral-300); }
+    .faq-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .3s var(--ease-out);
+    }
+    .faq-item.open .faq-body { grid-template-rows: 1fr; }
+    .faq-inner { overflow: hidden; }
+    .faq-inner p {
+      padding-bottom: 24px;
+      font-size: 15px;
+      color: var(--neutral-700);
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    /* ── FINAL CTA ────────────────────────────────────── */
+    .final-cta { padding: 96px 0; border-top: 1px solid var(--border); }
+    .final-card {
+      background: var(--neutral-50);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 88px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-card .grid-bg {
+      background-image:
+        linear-gradient(90deg, #231f200d 1px, transparent 1px),
+        linear-gradient(#231f200d 1px, transparent 1px);
+      background-size: 48px 48px;
+      -webkit-mask-image: radial-gradient(60% 70%, #000 30%, transparent 80%);
+      mask-image:         radial-gradient(60% 70%, #000 30%, transparent 80%);
+    }
+    .final-inner { position: relative; z-index: 2; }
+    .final-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.08;
+      max-width: 680px;
+      margin: 0 auto 16px;
+    }
+    .final-title .ed {
+      font-family: var(--font-fraunces);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .final-sub {
+      font-size: 17px;
+      color: var(--neutral-700);
+      max-width: 440px;
+      margin: 0 auto 32px;
+      line-height: 1.5;
+    }
+    .final-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .foot-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .foot-logo {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+      color: var(--fg);
+    }
+    footer p { font-size: 13px; color: var(--neutral-500); }
+
+    /* ── FLOATING WA ──────────────────────────────────── */
+    .wa-fab {
+      display: none;
+      position: fixed;
+      bottom: 22px;
+      right: 20px;
+      z-index: 200;
+      background: var(--accent);
+      color: #fff;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px #27b65740;
+      transition: transform .15s var(--ease-spring);
+    }
+    .wa-fab:hover { transform: scale(1.08); }
+    .wa-fab:active { transform: scale(.95); }
+
+    /* ── REVEAL ───────────────────────────────────────── */
+    .r {
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity .6s var(--ease-out) var(--d, 0ms),
+        transform .6s var(--ease-out) var(--d, 0ms);
+    }
+    .r.on { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .container { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 56px 0 48px; }
+      .hero-stats { grid-template-columns: 1fr; gap: 0; margin-top: 40px; }
+      .stat-divider { width: 100%; height: 1px; margin: 0; }
+      .stat-cell { padding: 18px 0; }
+      .stat-num { font-size: clamp(56px, 22vw, 96px); }
+      .ba-grid { grid-template-columns: 1fr; gap: 12px; }
+      .ba-arrow { flex-direction: row; padding: 0; }
+      .ba-card { min-height: auto; }
+      .pillar { grid-template-columns: 1fr; gap: 32px; }
+      .pillar.reverse { direction: ltr; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .databand-stats { grid-template-columns: 1fr; }
+      .databand-stat { padding: 24px 0 !important; border-right: none !important; border-bottom: 1px solid #ffffff14; }
+      .databand-stat:last-child { border-bottom: none; }
+      .final-card { padding: 48px 24px; }
+      .wa-fab { display: flex; }
+      section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════ -->
+<nav class="top">
+  <div class="container nav-inner">
+    <a href="#" class="nav-brand">Asincrono</a>
+    <div class="nav-links">
+      <a href="#problema">Il problema</a>
+      <a href="#come-funziona">Come funziona</a>
+      <a href="#prezzi">Prezzi</a>
+      <a href="#portfolio">Portfolio</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#WA" class="btn btn-primary btn-md">
+        Scrivimi su WhatsApp
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="container hero-inner">
+
+    <span class="eyebrow-tag r">
+      <span class="live-dot"></span>
+      Prenotazione diretta · Campania
+    </span>
+
+    <div class="hero-stats r" style="--d: 60ms">
+      <div class="stat-cell">
+        <div class="stat-num">
+          <span class="num-val counter" data-target="18">0</span><span class="pct">%</span>
+        </div>
+        <div class="stat-label">Commissioni OTA tipiche</div>
+        <div class="stat-sub">Booking.com, Airbnb, Expedia.</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-cell">
+        <div class="stat-num">
+          <span class="num-val counter" data-target="30">0</span>
+        </div>
+        <div class="stat-label">Giorni al go-live</div>
+        <div class="stat-sub">Dal contratto alla firma al sito live.</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-cell">
+        <div class="stat-num zero">
+          <span class="num-val">0</span>
+        </div>
+        <div class="stat-label">Commissioni dirette</div>
+        <div class="stat-sub">Ogni prenotazione è tua al 100%.</div>
+      </div>
+    </div>
+
+    <h1 class="hero-headline r" style="--d: 120ms">
+      Smetti di pagare Booking.com<br>per i tuoi <span class="ed">clienti.</span>
+    </h1>
+    <p class="hero-lede r" style="--d: 170ms">
+      Costruiamo sistemi di prenotazione diretta per strutture indipendenti in Campania — siti web, automazioni, Google Ads. Consegnato in 30 giorni.
+    </p>
+    <div class="hero-actions r" style="--d: 220ms">
+      <a href="#WA" class="btn btn-primary btn-lg">
+        Scrivimi su WhatsApp
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </a>
+      <a href="#portfolio" class="btn btn-ghost btn-lg">Guarda i progetti</a>
+    </div>
+    <div class="micro-meta r" style="--d: 270ms">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 256 256"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+      Nessun costo nascosto · Tutto intestato a te · Stack scelto da te
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ PROBLEM ════════════════════════════════════════ -->
+<section class="problem" id="problema">
+  <div class="container">
+    <div class="section-eyebrow r">Il problema da €15.000/anno</div>
+    <h2 class="section-title r" style="--d: 60ms">
+      Il tuo revenue sta <span class="ed">sanguinando</span> dove fa più male.
+    </h2>
+    <p class="section-lede r" style="--d: 120ms">
+      Ogni prenotazione che passa per Booking.com è un ospite che ti hanno affittato — non tuo. Il confronto parla da solo.
+    </p>
+
+    <div class="ba-grid r" style="--d: 160ms">
+
+      <!-- BEFORE -->
+      <div class="ba-card before">
+        <div class="ba-tag">Ieri · Booking.com · 3 notti</div>
+        <div class="ba-title">B&amp;B Napoli Centro — prenotazione OTA</div>
+        <ul class="ba-bullets">
+          <li>
+            <span class="bullet-icon x">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            L'ospite prenota su Booking.com — non conosce il tuo sito
+          </li>
+          <li>
+            <span class="bullet-icon x">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            Nessuna email, nessun numero di telefono dell'ospite
+          </li>
+          <li>
+            <span class="bullet-icon x">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            Booking.com ricontatta l'ospite con le sue offerte
+          </li>
+          <li>
+            <span class="bullet-icon x">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            €76 di commissione su €420 — persi per sempre
+          </li>
+        </ul>
+        <div class="ba-receipt" style="margin-top:auto">
+          <div class="ba-receipt-title">Estratto conto · 3 notti · €420</div>
+          <div class="row"><span class="lbl">Revenue lordo</span><span class="val">€420.00</span></div>
+          <div class="row"><span class="lbl">Commissione Booking (18%)</span><span class="val neg">−€75.60</span></div>
+          <div class="row"><span class="lbl">Dati dell'ospite</span><span class="val neg">Nessuno</span></div>
+          <div class="row total"><span class="lbl">Netto host</span><span class="val">€344.40</span></div>
+          <div><span class="spam-flag">
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 256 256"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09Z"/></svg>
+            Ospite ricontattato da Booking
+          </span></div>
+        </div>
+      </div>
+
+      <!-- ARROW -->
+      <div class="ba-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+      </div>
+
+      <!-- AFTER -->
+      <div class="ba-card after">
+        <div class="ba-tag">Oggi · Prenotazione diretta · 3 notti</div>
+        <div class="ba-title">B&amp;B Napoli Centro — prenotazione diretta</div>
+        <ul class="ba-bullets">
+          <li>
+            <span class="bullet-icon ok">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            L'ospite prenota sul tuo sito — relazione diretta
+          </li>
+          <li>
+            <span class="bullet-icon ok">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            Email, telefono e preferenze dell'ospite sono tuoi
+          </li>
+          <li>
+            <span class="bullet-icon ok">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            Messaggi automatici pre-arrivo, review request post-soggiorno
+          </li>
+          <li>
+            <span class="bullet-icon ok">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            </span>
+            €0 di commissione — €420 al 100% tuoi
+          </li>
+        </ul>
+        <div class="ba-receipt clean" style="margin-top:auto">
+          <div class="ba-receipt-title">Estratto conto · 3 notti · €420</div>
+          <div class="row"><span class="lbl">Revenue lordo</span><span class="val">€420.00</span></div>
+          <div class="row"><span class="lbl">Commissione diretta</span><span class="val pos">€0.00</span></div>
+          <div class="row"><span class="lbl">Dati dell'ospite</span><span class="val pos">Email + Telefono</span></div>
+          <div class="row total"><span class="lbl">Netto host</span><span class="val pos">€420.00</span></div>
+          <div><span class="verified-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
+            Ospite tuo · Relazione diretta
+          </span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PILLARS (COME FUNZIONA) ═══════════════════════ -->
+<section class="pillars-section" id="come-funziona">
+  <div class="container">
+    <div class="section-eyebrow r">Come funziona</div>
+    <h2 class="section-title r" style="--d:60ms">Tre passi. <span class="ed">Trenta giorni.</span> Risultati reali.</h2>
+
+    <!-- Pillar 01 -->
+    <div class="pillar r" style="--d:80ms">
+      <div class="pillar-text">
+        <div class="pillar-eyebrow">01 · Analizziamo</div>
+        <h3>Scopriamo <span class="ed">esattamente</span> quanto stai perdendo.</h3>
+        <p>Guardiamo la tua situazione attuale: sito, canali, commissioni pagate negli ultimi 12 mesi. Calcoliamo il tuo personale "OTA commission leak" — in euro, non in percentuali astratte.</p>
+      </div>
+      <div class="pillar-visual">
+        <div class="pv-label">Audit commissioni · anno precedente</div>
+        <div class="pv-metric"><span class="accent">€18.200</span></div>
+        <div class="pv-sub">Commissioni OTA pagate · struttura da €100K/anno</div>
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+          <div class="pv-item">
+            <span class="pv-dot green"></span>
+            <span>Booking.com</span>
+            <strong>€11.400 <span style="color:var(--red);font-size:11px">18%</span></strong>
+          </div>
+          <div class="pv-item">
+            <span class="pv-dot yellow"></span>
+            <span>Airbnb</span>
+            <strong>€4.800 <span style="color:var(--red);font-size:11px">15%</span></strong>
+          </div>
+          <div class="pv-item">
+            <span class="pv-dot blue"></span>
+            <span>Expedia / Hotels.com</span>
+            <strong>€2.000 <span style="color:var(--red);font-size:11px">20%</span></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pillar 02 -->
+    <div class="pillar reverse r" style="--d:80ms">
+      <div class="pillar-text">
+        <div class="pillar-eyebrow">02 · Costruiamo</div>
+        <h3>Sito, motore, pagamenti, <span class="ed">automazioni.</span></h3>
+        <p>Un sito su misura in italiano e inglese, integrato con WuBook/ZAK, Nexi e Revolut. Messaggi automatici agli ospiti, sistema di raccolta recensioni. Zero template generici.</p>
+      </div>
+      <div class="pillar-visual">
+        <div class="pv-label">Stack di consegna</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+          <div class="pv-item"><span class="pv-dot green"></span><span>Sito IT+EN su misura</span><strong style="color:var(--accent)">✓</strong></div>
+          <div class="pv-item"><span class="pv-dot green"></span><span>WuBook / ZAK</span><strong style="color:var(--accent)">✓</strong></div>
+          <div class="pv-item"><span class="pv-dot green"></span><span>Nexi + Revolut Business</span><strong style="color:var(--accent)">✓</strong></div>
+          <div class="pv-item"><span class="pv-dot yellow"></span><span>Automazioni messaggi</span><strong style="color:var(--accent)">✓</strong></div>
+          <div class="pv-item"><span class="pv-dot blue"></span><span>Sistema recensioni</span><strong style="color:var(--accent)">✓</strong></div>
+        </div>
+        <div style="margin-top:16px; background:var(--neutral-900); border-radius:10px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:#fffefb8c; font-size:12px;">Go-live previsto</span>
+          <span style="color:var(--accent); font-size:14px; font-weight:600;">30 giorni ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pillar 03 -->
+    <div class="pillar r" style="--d:80ms">
+      <div class="pillar-text">
+        <div class="pillar-eyebrow">03 · Portiamo traffico</div>
+        <h3>Google Ads <span class="ed">ottimizzati</span> per prenotazioni dirette.</h3>
+        <p>Campagne Google Ads configurate per il tuo mercato — Campania, Capri, Sorrento, Amalfi. Ottimizzate per lead WhatsApp e prenotazioni dirette, non per click generici.</p>
+      </div>
+      <div class="pillar-visual">
+        <div class="pv-label">Performance campagna · esempio</div>
+        <div class="pv-metric"><span class="accent">↑85%</span></div>
+        <div class="pv-sub">Tasso di risposta WhatsApp su lead inbound caldi</div>
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+          <div class="pv-item"><span class="pv-dot green"></span><span>Click → WhatsApp lead</span><strong>4.2%</strong></div>
+          <div class="pv-item"><span class="pv-dot yellow"></span><span>CPC medio Campania</span><strong>€0.38</strong></div>
+          <div class="pv-item"><span class="pv-dot blue"></span><span>ROI medio 90 giorni</span><strong style="color:var(--accent)">+340%</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ PORTFOLIO ══════════════════════════════════════ -->
+<section class="portfolio-section" id="portfolio">
+  <div class="container">
+    <div class="section-eyebrow r">Portfolio</div>
+    <h2 class="section-title r" style="--d:60ms">Tre strutture. <span class="ed">Zero</span> template generici.</h2>
+    <p class="section-lede r" style="--d:120ms">Ogni sito è costruito da zero, in italiano e inglese, ottimizzato per convertire. Non esistono due siti uguali.</p>
+
+    <div class="portfolio-grid r" style="--d:160ms">
+      <div class="portfolio-card">
+        <span class="portfolio-type">Villa · Capri</span>
+        <h3>Villa Alba Capri</h3>
+        <a href="https://villaalbacapri.it" target="_blank" rel="noopener noreferrer" class="portfolio-url">
+          villaalbacapri.it
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 256 256"><path d="M224,104a8,8,0,0,1-16,0V79.32l-82.34,82.35a8,8,0,0,1-11.32-11.32L196.68,68H172a8,8,0,0,1,0-16h44a8,8,0,0,1,8,8Zm-40,24a8,8,0,0,0-8,8v72H48V80h72a8,8,0,0,0,0-16H48A16,16,0,0,0,32,80V208a16,16,0,0,0,16,16H176a16,16,0,0,0,16-16V136A8,8,0,0,0,184,128Z"/></svg>
+        </a>
+        <p class="portfolio-proof">[one-liner proof — da aggiungere prima del lancio]</p>
+      </div>
+      <div class="portfolio-card">
+        <span class="portfolio-type">Villa · Campania</span>
+        <h3>Villa Silia</h3>
+        <a href="https://villasilia.it" target="_blank" rel="noopener noreferrer" class="portfolio-url">
+          villasilia.it
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 256 256"><path d="M224,104a8,8,0,0,1-16,0V79.32l-82.34,82.35a8,8,0,0,1-11.32-11.32L196.68,68H172a8,8,0,0,1,0-16h44a8,8,0,0,1,8,8Zm-40,24a8,8,0,0,0-8,8v72H48V80h72a8,8,0,0,0,0-16H48A16,16,0,0,0,32,80V208a16,16,0,0,0,16,16H176a16,16,0,0,0,16-16V136A8,8,0,0,0,184,128Z"/></svg>
+        </a>
+        <p class="portfolio-proof">[one-liner proof — da aggiungere prima del lancio]</p>
+      </div>
+      <div class="portfolio-card">
+        <span class="portfolio-type">B&amp;B · Napoli</span>
+        <h3>Silia House Napoli</h3>
+        <p class="portfolio-loc">Largo Torraca 71, Napoli Centro</p>
+        <p class="portfolio-proof">[one-liner proof — da aggiungere prima del lancio]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ════════════════════════════════════════ -->
+<section class="pricing-section" id="prezzi">
+  <div class="container">
+    <div class="section-eyebrow r">Prezzi</div>
+    <h2 class="section-title r" style="--d:60ms">Scegli il tuo <span class="ed">punto di partenza.</span></h2>
+    <p class="section-lede r" style="--d:120ms">Una tariffa fissa, nessuna sorpresa. I costi operativi restano sempre intestati a te.</p>
+
+    <div class="pricing-grid r" style="--d:160ms">
+
+      <!-- Vetrina -->
+      <div class="price-card">
+        <div class="price-name">Vetrina</div>
+        <div class="price-amount">€1.490</div>
+        <div class="price-cadence">una tantum</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Sito IT+EN su misura</li>
+          <li><span class="check">✓</span> Motore di prenotazione</li>
+          <li><span class="check">✓</span> Pagamenti (Nexi + Revolut)</li>
+          <li><span class="check">✓</span> 30 giorni di supporto</li>
+          <li class="muted"><span class="dash">—</span> Automazioni messaggi</li>
+          <li class="muted"><span class="dash">—</span> Sistema recensioni</li>
+          <li class="muted"><span class="dash">—</span> Google Ads</li>
+        </ul>
+        <a href="#WA" class="btn btn-ghost btn-md price-cta">Inizia con Vetrina</a>
+      </div>
+
+      <!-- Motore (featured) -->
+      <div class="price-card featured">
+        <div class="price-name">Motore</div>
+        <div class="price-amount">€2.990</div>
+        <div class="price-cadence">una tantum</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Tutto di Vetrina</li>
+          <li><span class="check">✓</span> Automazioni messaggi ospiti</li>
+          <li><span class="check">✓</span> Sistema raccolta recensioni</li>
+          <li><span class="check">✓</span> Google Ads (lancio)</li>
+          <li><span class="check">✓</span> 90 giorni di supporto</li>
+          <li class="muted"><span class="dash">—</span> Gestione ads continuativa</li>
+          <li class="muted"><span class="dash">—</span> Report mensile</li>
+        </ul>
+        <div class="price-guarantee">✶ Se nei 90 giorni non vedi un ritorno, lavoriamo gratis finché non lo vedi.</div>
+        <a href="#WA" class="btn btn-primary btn-md price-cta">Inizia con Motore</a>
+      </div>
+
+      <!-- Diretto Completo -->
+      <div class="price-card">
+        <div class="price-name">Diretto Completo</div>
+        <div class="price-amount">€2.990</div>
+        <div class="price-cadence">+ €290/mese</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Tutto di Motore</li>
+          <li><span class="check">✓</span> Gestione ads continuativa</li>
+          <li><span class="check">✓</span> Report mensile performance</li>
+          <li><span class="check">✓</span> Modifiche sito on request</li>
+          <li><span class="check">✓</span> Supporto prioritario</li>
+          <li><span class="check">✓</span> Garanzia 90 giorni</li>
+        </ul>
+        <div class="price-guarantee">✶ Se nei 90 giorni non vedi un ritorno, lavoriamo gratis finché non lo vedi.</div>
+        <a href="#WA" class="btn btn-ghost btn-md price-cta">Inizia con Diretto</a>
+      </div>
+
+    </div>
+    <p class="price-note r" style="--d:200ms">I costi operativi (dominio, hosting, motore di prenotazione, budget ads) rimangono sempre intestati a te. Paghi Dylan solo per il lavoro.</p>
+  </div>
+</section>
+
+<!-- ═══ DATABAND (dark) ═══════════════════════════════ -->
+<section class="databand">
+  <div class="grid-bg"></div>
+  <div class="container databand-inner">
+    <div class="section-eyebrow r">Il contesto di mercato</div>
+    <h2 class="section-title r" style="--d:60ms">Napoli, 2025–2026. La finestra è <span class="ed">adesso.</span></h2>
+    <p class="section-lede r" style="--d:120ms">Il mercato si sta professionalizzando velocemente. Chi entra nel sistema di prenotazione diretta oggi ha 2–3 anni di vantaggio su chi aspetta.</p>
+
+    <div class="databand-stats r" style="--d:160ms">
+      <div class="databand-stat">
+        <div class="ds-num"><span class="ed">20</span><span style="font-family:var(--font-fraunces);font-style:italic;color:#fffefb60;font-size:.38em;font-weight:400;align-self:flex-end;margin-bottom:.18em">M+</span></div>
+        <div class="ds-label">Turisti a Napoli nel 2025</div>
+        <div class="ds-sub">+20% previsto nel 2026 con l'America's Cup</div>
+      </div>
+      <div class="databand-stat">
+        <div class="ds-num"><span class="ed">8.000</span></div>
+        <div class="ds-label">Strutture indipendenti attive</div>
+        <div class="ds-sub">STR listings attivi in città — pochi con sistema diretto</div>
+      </div>
+      <div class="databand-stat">
+        <div class="ds-num"><span class="accent">2–3</span></div>
+        <div class="ds-label">Anni di finestra competitiva</div>
+        <div class="ds-sub">Prima che il mercato maturi come Barcelona</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ════════════════════════════════════════════ -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div class="section-eyebrow r">FAQ</div>
+    <h2 class="section-title r" style="--d:60ms">Domande <span class="ed">frequenti.</span></h2>
+
+    <div class="faq-list r" style="--d:120ms">
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Devo avere già un sito?
+          <span class="faq-ic">+</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          <p>No, partiamo da zero. Costruiamo tutto: struttura, copy in italiano e inglese, integrazione con il motore di prenotazione, setup pagamenti.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Quanto tempo ci vuole davvero?
+          <span class="faq-ic">+</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          <p>30 giorni dalla firma al go-live. La data di partenza si fissa nel contratto — nessun ritardo non comunicato in anticipo.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Funziona anche per strutture piccole?
+          <span class="faq-ic">+</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          <p>Sì, se fai almeno €60K/anno ha senso economico. Sotto quella soglia le commissioni recuperabili non coprono l'investimento — te lo diciamo subito, prima ancora di firmare.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Chi gestisce le prenotazioni dopo il lancio?
+          <span class="faq-ic">+</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          <p>Tu, in piena autonomia. Ti formiamo, ti lasciamo tutto documentato e il sistema rimane sempre intestato a te — nessuna dipendenza per le operazioni quotidiane.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          La garanzia 90 giorni come funziona?
+          <span class="faq-ic">+</span>
+        </button>
+        <div class="faq-body"><div class="faq-inner">
+          <p>Se nei 90 giorni dal go-live non vedi un ritorno sull'investimento documentabile, continuiamo a lavorare gratis finché non lo vedi. Si applica ai piani Motore e Diretto Completo.</p>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ══════════════════════════════════════ -->
+<section class="final-cta">
+  <div class="container">
+    <div class="final-card r">
+      <div class="grid-bg"></div>
+      <div class="final-inner">
+        <h2 class="final-title">Smetti di pagare Booking.com<br>per i tuoi <span class="ed">clienti.</span></h2>
+        <p class="final-sub">Una conversazione su WhatsApp non costa niente. Scopri se ha senso per la tua struttura.</p>
+        <div class="final-actions">
+          <a href="#WA" class="btn btn-primary btn-lg">
+            Scrivimi ora
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+          </a>
+        </div>
+        <div class="micro-meta" style="justify-content:center; margin-top:16px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 256 256"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg>
+          Risposta in meno di 24 ore · Made in Napoli
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════ -->
+<footer>
+  <div class="container foot-inner">
+    <span class="foot-logo">Asincrono</span>
+    <p>asynchrono.cloud &nbsp;·&nbsp; P.IVA da aggiungere &nbsp;·&nbsp; Made in Napoli</p>
+  </div>
+</footer>
+
+<!-- ═══ FLOATING WA ════════════════════════════════════ -->
+<a href="#WA" class="wa-fab" aria-label="Scrivimi su WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+  // ── WA URL ────────────────────────────────────────────────────────────────
+  const WA = 'https://wa.me/39XXXXXXXXXX?text=Ciao%2C%20vorrei%20sapere%20di%20pi%C3%B9%20sul%20sistema%20di%20prenotazione%20diretta%20per%20la%20mia%20struttura.';
+  document.querySelectorAll('[href="#WA"]').forEach(el => {
+    el.href = WA; el.target = '_blank'; el.rel = 'noopener noreferrer';
+  });
+
+  // ── FAQ accordion ─────────────────────────────────────────────────────────
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const was = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!was) item.classList.add('open');
+    });
+  });
+
+  // ── Counter animation ─────────────────────────────────────────────────────
+  function runCounter(el, delayMs) {
+    const target = +el.dataset.target;
+    if (isNaN(target)) return;
+    el.textContent = '0';
+    setTimeout(() => {
+      const dur = 900;
+      const startTs = performance.now();
+      function step(now) {
+        const t = Math.min((now - startTs) / dur, 1);
+        // ease-out cubic identical to clairvo
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(ease * target);
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = target; // snap to exact value at end
+      }
+      requestAnimationFrame(step);
+    }, delayMs);
+  }
+
+  // ── Reveal observer ───────────────────────────────────────────────────────
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('on');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.r').forEach(el => revealObs.observe(el));
+
+  // ── Counter observer (separate, fires when stats block enters viewport) ───
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        // Stagger: first counter starts after 120ms (reveal anim has begun),
+        // each subsequent one delayed by 100ms
+        e.target.querySelectorAll('.counter').forEach((el, i) => {
+          runCounter(el, 120 + i * 100);
+        });
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 }); // wait until 30% visible so user actually sees it
+
+  document.querySelectorAll('.hero-stats').forEach(el => counterObs.observe(el));
+</script>
+</body>
+</html>

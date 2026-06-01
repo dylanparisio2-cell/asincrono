@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diretto — Prenotazioni dirette per strutture indipendenti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F4EE;
+    --surface:#FFFFFF;
+    --surface-warm:#FDFBF6;
+    --ink:#2A2723;
+    --muted:#7A736A;
+    --line:#E6DFD3;
+    --line-soft:rgba(42,39,35,0.08);
+    --accent:#A85C3C;
+    --accent-soft:#F2E7DF;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Manrope','Helvetica Neue',Arial,sans-serif;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .atmos{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(60vw 50vh at 78% 8%, rgba(168,92,60,0.05), transparent 70%),
+      radial-gradient(55vw 50vh at 12% 92%, rgba(120,115,106,0.05), transparent 70%);
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;position:relative;z-index:1}
+  section{padding:104px 0}
+  @media(max-width:720px){section{padding:72px 0}body{font-size:16px}}
+
+  h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em;line-height:1.08;color:var(--ink)}
+  h1{font-size:clamp(2.6rem,6vw,4.6rem)}
+  h2{font-size:clamp(2rem,4.2vw,3.1rem)}
+  h3{font-size:1.5rem;line-height:1.2}
+  .lead{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--ink);line-height:1.55;max-width:46ch}
+  .eyebrow{font-family:var(--sans);font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent)}
+  .muted{color:var(--muted)}
+  .section-intro{max-width:54ch;margin-bottom:56px}
+  .section-intro h2{margin:14px 0 18px}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(247,244,238,0.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{font-family:var(--serif);font-size:1.5rem;font-weight:600;letter-spacing:0.02em}
+  .brand span{color:var(--accent)}
+  .nav-cta{font-size:0.85rem;font-weight:600}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:600;font-size:0.95rem;text-decoration:none;padding:15px 26px;border-radius:5px;border:1px solid transparent;cursor:pointer;transition:transform .18s cubic-bezier(.16,1,.3,1),background .2s,color .2s,border-color .2s}
+  .btn-primary{background:var(--ink);color:var(--bg)}
+  .btn-primary:hover{background:#3a352e}
+  .btn-primary:active{transform:scale(.985)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-arrow{font-family:var(--serif);font-size:1.15rem;line-height:0}
+
+  /* hero */
+  .hero{padding-top:72px;padding-bottom:88px}
+  .hero .eyebrow{margin-bottom:22px;display:block}
+  .hero h1{max-width:14ch}
+  .hero .lead{margin:28px 0 38px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-note{margin-top:22px;font-size:0.9rem;color:var(--muted)}
+
+  /* problem */
+  .problem{background:var(--ink);color:var(--bg)}
+  .problem h2,.problem h3{color:var(--bg)}
+  .problem .eyebrow{color:#D9A98E}
+  .problem .lead{color:#EAE5DC}
+  .bleed{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4rem);color:#D9A98E;line-height:1;margin:8px 0 6px}
+  .problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+  @media(max-width:720px){.problem-grid{grid-template-columns:1fr;gap:18px}}
+  .pcard{border:1px solid rgba(247,244,238,0.16);border-radius:10px;padding:28px;background:rgba(247,244,238,0.03)}
+  .pcard p{color:#DAD5CC;font-size:0.98rem;margin-top:8px}
+  .reframe{margin-top:48px;font-family:var(--serif);font-size:clamp(1.4rem,3vw,2rem);line-height:1.3;max-width:30ch;color:#fff}
+
+  /* steps */
+  .steps{counter-reset:s}
+  .step{display:grid;grid-template-columns:64px 1fr;gap:24px;padding:30px 0;border-top:1px solid var(--line)}
+  .step:last-child{border-bottom:1px solid var(--line)}
+  .step-num{counter-increment:s;font-family:var(--serif);font-size:2.2rem;color:var(--accent);line-height:1}
+  .step-num::before{content:counter(s,decimal-leading-zero)}
+  .step h3{margin-bottom:6px}
+  .step p{color:var(--muted);max-width:60ch}
+  .step .when{display:inline-block;margin-top:10px;font-size:0.78rem;font-weight:600;letter-spacing:0.04em;color:var(--accent);background:var(--accent-soft);padding:4px 11px;border-radius:999px}
+  .commit{margin-top:40px;padding:26px 30px;background:var(--surface-warm);border:1px solid var(--line);border-radius:12px}
+  .commit strong{font-weight:600}
+
+  /* deliverables */
+  .deliver-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:980px){.deliver-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.deliver-grid{grid-template-columns:1fr}}
+  .dcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:30px;transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s}
+  .dcard:hover{transform:translateY(-2px);box-shadow:0 4px 18px rgba(42,39,35,0.05)}
+  .dcard .dk{font-family:var(--serif);font-size:1.3rem;font-weight:600;margin-bottom:9px}
+  .dcard p{font-size:0.96rem;color:var(--muted)}
+
+  /* pricing */
+  .pricing{background:var(--surface-warm)}
+  .buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:0 0 56px}
+  @media(max-width:720px){.buckets{grid-template-columns:1fr}}
+  .bucket{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:22px 24px;background:var(--surface)}
+  .bucket .bn{font-size:0.74rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .bucket p{font-size:0.95rem;color:var(--muted)}
+  .bucket strong{color:var(--ink);font-weight:600}
+
+  .founder{display:inline-flex;align-items:center;gap:10px;background:var(--accent-soft);border:1px solid #E4CDBF;border-radius:8px;padding:12px 18px;font-size:0.92rem;color:#7A3F26;margin-bottom:36px}
+  .founder b{font-weight:600}
+
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  @media(max-width:980px){.tiers{grid-template-columns:1fr}}
+  .tier{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:34px 30px;display:flex;flex-direction:column;height:100%}
+  .tier.featured{border-color:var(--accent);box-shadow:0 6px 30px rgba(168,92,60,0.08)}
+  .tier-badge{align-self:flex-start;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#fff;background:var(--accent);padding:5px 12px;border-radius:999px;margin-bottom:18px}
+  .tier-name{font-family:var(--serif);font-size:1.9rem;font-weight:600}
+  .tier-tag{font-size:0.92rem;color:var(--muted);margin:6px 0 22px;min-height:42px}
+  .price{font-family:var(--serif);font-size:2.8rem;font-weight:600;line-height:1}
+  .price small{font-family:var(--sans);font-size:0.85rem;font-weight:500;color:var(--muted)}
+  .price-sub{font-size:0.86rem;color:var(--muted);margin-top:6px}
+  .price-value{font-size:0.84rem;color:var(--accent);margin-top:8px;font-weight:600}
+  .tier ul{list-style:none;margin:24px 0 28px;flex:1}
+  .tier li{position:relative;padding:9px 0 9px 28px;font-size:0.95rem;border-top:1px solid var(--line-soft);color:var(--ink)}
+  .tier li:first-child{border-top:none}
+  .tier li::before{content:"";position:absolute;left:2px;top:16px;width:9px;height:9px;border-radius:50%;background:var(--accent-soft);border:1.5px solid var(--accent)}
+  .tier li.head{padding-left:0;font-weight:600;color:var(--muted);font-size:0.82rem;letter-spacing:0.04em;text-transform:uppercase}
+  .tier li.head::before{display:none}
+  .tier .btn{width:100%;justify-content:center}
+  .pricing-note{margin-top:32px;font-size:0.92rem;color:var(--muted);max-width:60ch}
+
+  /* guarantee */
+  .guarantee .inner{background:var(--ink);color:var(--bg);border-radius:18px;padding:60px 56px;position:relative;overflow:hidden}
+  @media(max-width:720px){.guarantee .inner{padding:40px 28px}}
+  .guarantee h2{color:var(--bg);max-width:20ch}
+  .guarantee .eyebrow{color:#D9A98E}
+  .guarantee .big{font-family:var(--serif);font-size:clamp(1.5rem,3.2vw,2.2rem);line-height:1.3;margin:18px 0 24px;max-width:36ch;color:#fff}
+  .guarantee .cond{color:#CFC9C0;font-size:0.96rem;max-width:62ch}
+  .guarantee .cond b{color:#E9C9B7;font-weight:600}
+
+  /* faq */
+  .faq-item{border-bottom:1px solid var(--line)}
+  .faq-q{width:100%;background:none;border:none;text-align:left;font-family:var(--sans);font-size:1.12rem;font-weight:600;color:var(--ink);padding:26px 44px 26px 0;cursor:pointer;position:relative}
+  .faq-q .sign{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-family:var(--serif);font-size:1.7rem;color:var(--accent);font-weight:400;transition:transform .25s}
+  .faq-item.open .faq-q .sign{transform:translateY(-50%) rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.16,1,.3,1)}
+  .faq-a .inner{padding:0 44px 28px 0;color:var(--muted);max-width:72ch}
+  .faq-a a{color:var(--accent)}
+
+  /* proof */
+  .proof{background:var(--surface-warm)}
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:64px}
+  @media(max-width:720px){.work-grid{grid-template-columns:1fr}}
+  .work{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:30px;transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s;text-decoration:none;color:inherit;display:block}
+  .work:hover{transform:translateY(-2px);box-shadow:0 4px 18px rgba(42,39,35,0.05)}
+  .work .wloc{font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .work .wname{font-family:var(--serif);font-size:1.7rem;font-weight:600;margin:8px 0 6px}
+  .work .wlink{font-size:0.9rem;color:var(--muted);display:inline-flex;align-items:center;gap:7px;margin-top:10px}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  @media(max-width:720px){.pillars{grid-template-columns:1fr;gap:20px}}
+  .pillar h3{font-size:1.35rem;margin-bottom:8px}
+  .pillar p{color:var(--muted);font-size:0.96rem}
+
+  /* final cta */
+  .final{text-align:center}
+  .final h2{max-width:22ch;margin:14px auto 20px}
+  .final .lead{margin:0 auto 36px}
+  .final .hero-cta{justify-content:center}
+
+  footer{border-top:1px solid var(--line);padding:48px 0 56px;color:var(--muted);font-size:0.9rem}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px}
+  footer .brand{font-size:1.3rem}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--ink)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<div class="atmos" aria-hidden="true"></div>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="brand">Diretto<span>.</span></div>
+    <a class="nav-cta btn btn-ghost" href="#contatti">Analisi gratuita</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow reveal">Per B&amp;B, agriturismi e case vacanza indipendenti</span>
+    <h1 class="reveal">Più prenotazioni dirette. Meno commissioni. Nessun pensiero tecnico.</h1>
+    <p class="lead reveal">Ti costruisco un sito che prende prenotazioni da solo, incassa i pagamenti e parla con i tuoi ospiti. Così smetti di regalare una fetta dei tuoi guadagni a Booking e Airbnb — e cominci a tenerli tu.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="#contatti">Richiedi l'analisi gratuita <span class="btn-arrow">&rarr;</span></a>
+      <a class="btn btn-ghost" href="#come-funziona">Come funziona</a>
+    </div>
+    <p class="hero-note reveal">Nessun impegno. Ti dico, numeri alla mano, quanto stai perdendo oggi.</p>
+  </div>
+</header>
+
+<section class="problem">
+  <div class="wrap">
+    <div class="section-intro reveal">
+      <span class="eyebrow">Il problema, detto chiaro</span>
+      <h2>Ogni prenotazione che passa da Booking ti costa.</h2>
+    </div>
+    <p class="lead reveal">Ogni volta che un ospite prenota su Booking o Airbnb, una parte del prezzo non arriva mai nelle tue tasche: di solito tra il 15% e il 20%.</p>
+    <div class="reveal">
+      <div class="bleed">fino a 16.000 &euro;</div>
+      <p class="muted" style="color:#CFC9C0">regalati ogni anno, su 80.000 &euro; di prenotazioni. Soldi tuoi, che finiscono altrove.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="pcard reveal">
+        <h3 style="font-size:1.25rem">Il sito non lavora</h3>
+        <p>Se ce l'hai, è vecchio, lento, o non fa prenotare nessuno. Spesso gli ospiti non lo trovano nemmeno.</p>
+      </div>
+      <div class="pcard reveal">
+        <h3 style="font-size:1.25rem">Tempo perso a mano</h3>
+        <p>Rispondi agli stessi messaggi tutti i giorni: orari di arrivo, istruzioni, richieste. Ore ogni settimana.</p>
+      </div>
+      <div class="pcard reveal">
+        <h3 style="font-size:1.25rem">Dipendi dagli altri</h3>
+        <p>I clienti arrivano solo dalle piattaforme, alle loro regole e ai loro prezzi. Tu non hai voce in capitolo.</p>
+      </div>
+    </div>
+    <p class="reframe reveal">Non è colpa tua. Nessuno ti ha mai messo in mano gli strumenti giusti, già montati e funzionanti.</p>
+  </div>
+</section>
+
+<section id="come-funziona" class="steps-section">
+  <div class="wrap">
+    <div class="section-intro reveal">
+      <span class="eyebrow">Come funziona</span>
+      <h2>Cinque passi. Il lavoro lo faccio io.</h2>
+      <p class="lead">Tu mi dai foto, testi e qualche ora del tuo tempo. A tutto il resto penso io.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="step-num"></div><div>
+        <h3>Analisi gratuita</h3>
+        <p>Guardo la tua presenza online e ti dico, numeri alla mano, quanto stai perdendo con le commissioni e cosa cambierebbe. Senza nessun impegno.</p>
+      </div></div>
+      <div class="step reveal"><div class="step-num"></div><div>
+        <h3>Accordo e acconto</h3>
+        <p>Scegli il pacchetto che fa per te. Versi il 50% per partire, il resto al lancio. Tutto scritto e chiaro, prima di cominciare.</p>
+      </div></div>
+      <div class="step reveal"><div class="step-num"></div><div>
+        <h3>Costruzione</h3>
+        <p>Costruisco il sito, collego il motore di prenotazione e i pagamenti, preparo i messaggi automatici. Tu non devi toccare niente.</p>
+        <span class="when">4&ndash;6 settimane</span>
+      </div></div>
+      <div class="step reveal"><div class="step-num"></div><div>
+        <h3>Revisione e lancio</h3>
+        <p>Lo guardiamo insieme, sistemiamo gli ultimi dettagli, e andiamo online. Da quel momento il sito prende prenotazioni dirette.</p>
+      </div></div>
+      <div class="step reveal"><div class="step-num"></div><div>
+        <h3>Dopo il lancio</h3>
+        <p>Il sito lavora da solo, per sempre. Se vuoi, me ne occupo io ogni mese: campagne, modifiche, assistenza. Ma è una tua scelta, non un obbligo.</p>
+      </div></div>
+    </div>
+    <div class="commit reveal">
+      <strong>Il tuo impegno totale: poche ore.</strong> Una chiamata all'inizio, le foto e i testi della struttura, una revisione prima del lancio. Nient'altro.
+    </div>
+  </div>
+</section>
+
+<section class="deliverables">
+  <div class="wrap">
+    <div class="section-intro reveal">
+      <span class="eyebrow">Cosa ricevi davvero</span>
+      <h2>Non un sito. Un sistema che lavora per te.</h2>
+    </div>
+    <div class="deliver-grid">
+      <div class="dcard reveal"><div class="dk">Sito su misura</div><p>Bello, veloce, in italiano e in inglese. Costruito per trasformare chi guarda in chi prenota.</p></div>
+      <div class="dcard reveal"><div class="dk">Prenotazione diretta</div><p>Gli ospiti prenotano e pagano sul tuo sito, senza intermediari e senza commissioni da pagare a nessuno.</p></div>
+      <div class="dcard reveal"><div class="dk">Pagamenti pronti</div><p>Incassi diretti, sicuri, senza account che si bloccano da un giorno all'altro. Tutto già configurato.</p></div>
+      <div class="dcard reveal"><div class="dk">Messaggi automatici</div><p>Benvenuto, istruzioni di arrivo, richiesta recensione. Scritti una volta, inviati per sempre da soli — in più lingue.</p></div>
+      <div class="dcard reveal"><div class="dk">Più recensioni</div><p>Un sistema che chiede la recensione al momento giusto, così sali nelle classifiche e attiri più ospiti.</p></div>
+      <div class="dcard reveal"><div class="dk">Visibilità su Google</div><p>Porto sul tuo sito persone che cercano davvero una struttura come la tua. (Incluso nel pacchetto Motore.)</p></div>
+      <div class="dcard reveal"><div class="dk">Un sito che non si rompe</div><p>Niente WordPress, niente aggiornamenti, niente virus. Come un muro di pietra, non una baracca da sistemare ogni mese.</p></div>
+      <div class="dcard reveal"><div class="dk">Un solo riferimento</div><p>Per qualsiasi cosa parli con me. Non devi rincorrere tecnici, piattaforme o assistenze straniere.</p></div>
+      <div class="dcard reveal"><div class="dk">Tutto resta tuo</div><p>Dominio, sito, account, dati: tutto a tuo nome. Le chiavi le tieni tu, sempre.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="prezzi" class="pricing">
+  <div class="wrap">
+    <div class="section-intro reveal">
+      <span class="eyebrow">Prezzi chiari, senza sorprese</span>
+      <h2>Tre tipi di spesa. Separate e dette in chiaro.</h2>
+    </div>
+    <div class="buckets">
+      <div class="bucket reveal"><div class="bn">1 &middot; Una volta sola</div><p>Quello che paghi a <strong>me</strong> per costruire il sistema. Si versa una volta: 50% per iniziare, 50% al lancio.</p></div>
+      <div class="bucket reveal"><div class="bn">2 &middot; Ogni mese, se vuoi</div><p>Il piano di gestione, <strong>opzionale</strong>. Lo aggiungi se vuoi che me ne occupi io. Si disdice quando vuoi.</p></div>
+      <div class="bucket reveal"><div class="bn">3 &middot; Le spese tue</div><p>Servizi esterni a <strong>tuo nome</strong>: dominio, hosting, motore di prenotazione, pubblicità. Poche decine di euro l'anno per le basi, più il budget pubblicità che decidi tu. Te le stimo prima.</p></div>
+    </div>
+
+    <div class="founder reveal"><b>Offerta fondatori</b> &mdash; per le prime 3 strutture: prezzo ridotto in cambio di una recensione e del permesso di mostrare il tuo caso come esempio.</div>
+
+    <div class="tiers">
+      <div class="tier reveal">
+        <div class="tier-name">Vetrina</div>
+        <div class="tier-tag">Per esserci online e prendere prenotazioni dirette, subito.</div>
+        <div class="price">1.490 &euro; <small>una tantum</small></div>
+        <div class="price-sub">50% all'avvio, 50% al lancio</div>
+        <ul>
+          <li>Sito su misura (italiano + inglese)</li>
+          <li>Motore di prenotazione diretta</li>
+          <li>Pagamenti configurati e pronti</li>
+          <li>30 giorni di assistenza inclusi</li>
+        </ul>
+        <a class="btn btn-ghost" href="#contatti">Scegli Vetrina</a>
+      </div>
+
+      <div class="tier featured reveal">
+        <span class="tier-badge">Consigliato</span>
+        <div class="tier-name">Motore</div>
+        <div class="tier-tag">Il sistema completo. Prenotazioni, ospiti e visibilità, già montati.</div>
+        <div class="price">2.990 &euro; <small>una tantum</small></div>
+        <div class="price-sub">50% all'avvio, 50% al lancio</div>
+        <div class="price-value">Valore reale, comprato a pezzi: oltre 7.000 &euro;</div>
+        <ul>
+          <li class="head">Tutto della Vetrina, più:</li>
+          <li>Messaggi automatici agli ospiti (multilingua)</li>
+          <li>Sistema per ottenere più recensioni</li>
+          <li>Libreria di messaggi pronti (WhatsApp, email)</li>
+          <li>Lancio campagne su Google</li>
+          <li>Garanzia risultati a 90 giorni</li>
+        </ul>
+        <a class="btn btn-primary" href="#contatti">Scegli Motore <span class="btn-arrow">&rarr;</span></a>
+      </div>
+
+      <div class="tier reveal">
+        <div class="tier-name">Diretto Completo</div>
+        <div class="tier-tag">Per pensare a zero. Me ne occupo io, tu incassi.</div>
+        <div class="price">2.990 &euro; <small>+ 290 &euro;/mese</small></div>
+        <div class="price-sub">Mensile opzionale, si disdice quando vuoi</div>
+        <ul>
+          <li class="head">Tutto del Motore, più ogni mese:</li>
+          <li>Gestione e ottimizzazione delle campagne</li>
+          <li>Modifiche al sito quando ti servono</li>
+          <li>Assistenza prioritaria (rispondo io)</li>
+          <li>Un report semplice ogni mese</li>
+        </ul>
+        <a class="btn btn-ghost" href="#contatti">Scegli Completo</a>
+      </div>
+    </div>
+    <p class="pricing-note reveal">Il piano mensile di gestione (290 &euro;/mese) si può aggiungere anche dopo, a qualsiasi pacchetto, e si disdice quando vuoi. Il sito resta tuo e continua a funzionare comunque.</p>
+  </div>
+</section>
+
+<section class="guarantee">
+  <div class="wrap">
+    <div class="inner reveal">
+      <span class="eyebrow">La mia garanzia</span>
+      <h2>Il rischio me lo prendo io.</h2>
+      <p class="big">Se entro 90 giorni dal lancio non ricevi almeno 5 richieste di prenotazione dirette, continuo a lavorare gratis finché non arrivano.</p>
+      <p class="cond">Vale a queste semplici condizioni: che i tuoi <b>prezzi e la disponibilità</b> siano in linea col mercato, che ci sia un <b>budget pubblicitario minimo concordato</b>, e che tu mi mandi <b>foto e testi nei tempi</b>. Niente trucchi: voglio solo che tu sia tranquillo prima di dirmi sì.</p>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <div class="section-intro reveal">
+      <span class="eyebrow">Domande frequenti</span>
+      <h2>Tutto quello che vuoi sapere prima di partire.</h2>
+    </div>
+    <div class="faq-list reveal">
+
+      <div class="faq-item"><button class="faq-q">Quanto tempo ci vuole?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Dal momento in cui partiamo, il sito è online in 4&ndash;6 settimane. Il tuo impegno è solo di poche ore in tutto: una chiamata all'inizio, le foto e i testi, una revisione prima del lancio. Il resto lo faccio io.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Quanta manutenzione richiede?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Il sito in sé quasi nessuna: non è WordPress, quindi non ci sono aggiornamenti da fare, non si rompe da solo e non prende virus. Le uniche cose che hanno bisogno di attenzione nel tempo &mdash; cambi di prezzo o foto, nuove offerte, ottimizzazione delle campagne &mdash; sono opzionali. Se le vuoi affidare a me, c'è il piano mensile; altrimenti il sito continua a funzionare così com'è.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Se qualcosa si rompe, chi lo risolve?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Lo risolvo io. Tu chiami una sola persona &mdash; me &mdash; e non devi mai parlare con l'hosting, con la piattaforma di prenotazione o con Google. Per i primi 30 giorni dopo il lancio qualsiasi problema lo sistemo gratis. Dopo, è coperto dal piano mensile, oppure si paga a richiesta se non ce l'hai.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">È un pagamento ricorrente?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">No. La costruzione si paga una volta sola. Il piano mensile è opzionale, separato, e si disdice quando vuoi. Importante: il tuo sito non scade e non smette di funzionare se non prendi il piano. Il piano serve a migliorarlo nel tempo e ad avere un'assistenza dedicata, non a "tenerlo acceso".</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Le spese del sito sono a carico mio?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Sì, e per un buon motivo. I servizi esterni &mdash; dominio, hosting, motore di prenotazione, pubblicità &mdash; sono a tuo nome, così restano sempre tuoi. Sono cifre piccole: poche decine di euro l'anno per le basi, più il budget pubblicità che decidi tu. Ti do una stima chiara prima di partire, senza sorprese. Il mio lavoro è tutto incluso nel prezzo del pacchetto.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Di chi sono le credenziali e i dati?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Tuoi. Tutto a tuo nome: dominio, account, pagamenti, dati degli ospiti. Io uso soltanto gli accessi che mi servono per lavorare, e alla fine del lavoro hai tutte le chiavi in mano. Se un giorno decidi di non lavorare più con me, tieni tutto: sito, account e dati. Niente resta legato a me. I tuoi dati bancari e di pagamento, poi, li inserisci sempre tu in prima persona.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Cosa non è incluso?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Solo le spese esterne a tuo nome (dominio, hosting, motore di prenotazione, commissioni dei pagamenti) e il budget che decidi di mettere in pubblicità. Tutto il lavoro &mdash; progettazione, costruzione, configurazioni, automazioni &mdash; è incluso nel prezzo del pacchetto.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">E se a un certo punto smetto il piano mensile?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Nessun problema. Il sito resta tuo e continua a prendere prenotazioni come prima. Smette solo l'ottimizzazione e le modifiche fatte da me. Puoi rientrare nel piano quando vuoi.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Devo essere bravo col computer?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">No, per niente. Tutto è pensato apposta perché tu non debba toccare nulla di tecnico. Se sai rispondere a un messaggio sul telefono, sai usare quello che ti consegno.</div></div></div>
+
+      <div class="faq-item"><button class="faq-q">Posso vedere lavori già fatti?<span class="sign">+</span></button>
+        <div class="faq-a"><div class="inner">Certo. Ho costruito i siti di Villa Alba Capri, Silia House e Villa Silia. Li trovi più in basso: aprili sul telefono e guarda da solo la differenza rispetto a un sito qualsiasi.</div></div></div>
+
+    </div>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <div class="section-intro reveal">
+      <span class="eyebrow">Lavori già fatti</span>
+      <h2>Strutture vere, online davvero.</h2>
+    </div>
+    <div class="work-grid">
+      <a class="work reveal" href="https://www.villaalbacapri.it" target="_blank" rel="noopener">
+        <div class="wloc">Capri</div>
+        <div class="wname">Villa Alba</div>
+        <p class="muted">Una struttura di lusso, con un sito all'altezza: elegante, veloce, pronto a prendere prenotazioni dirette.</p>
+        <span class="wlink">Vedi il sito &rarr;</span>
+      </a>
+      <a class="work reveal" href="#" target="_blank" rel="noopener">
+        <div class="wloc">Napoli centro</div>
+        <div class="wname">Silia House</div>
+        <p class="muted">Un B&amp;B in città gestito con prenotazioni, messaggi automatici e pagamenti, tutto collegato.</p>
+        <span class="wlink">Vedi il sito &rarr;</span>
+      </a>
+      <a class="work reveal" href="https://www.villasilia.it" target="_blank" rel="noopener">
+        <div class="wloc">Costiera</div>
+        <div class="wname">Villa Silia</div>
+        <p class="muted">Una villa che racconta sé stessa e converte i visitatori in ospiti, senza passare dalle piattaforme.</p>
+        <span class="wlink">Vedi il sito &rarr;</span>
+      </a>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal"><h3>Tutto è tuo</h3><p>Dominio, account, dati: a tuo nome, sempre. Niente resta legato a me.</p></div>
+      <div class="pillar reveal"><h3>Un solo riferimento</h3><p>Parli con me per qualsiasi cosa. Niente tecnici, piattaforme o assistenze da rincorrere.</p></div>
+      <div class="pillar reveal"><h3>Garanzia risultati</h3><p>Se non arrivano le prime richieste dirette in 90 giorni, lavoro gratis finché non arrivano.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contatti" class="final">
+  <div class="wrap">
+    <span class="eyebrow reveal">Il primo passo è gratis</span>
+    <h2 class="reveal">Scopriamo quanto stai perdendo. Senza impegno.</h2>
+    <p class="lead reveal">Ti dico, numeri alla mano, quanto ti costano oggi le commissioni e cosa cambierebbe con un sistema di prenotazioni dirette. Nessun costo, nessuna pressione.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="https://wa.me/390000000000" target="_blank" rel="noopener">Scrivimi su WhatsApp <span class="btn-arrow">&rarr;</span></a>
+      <a class="btn btn-ghost" href="mailto:ciao@diretto.it">Scrivimi una email</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand">Diretto<span style="color:var(--accent)">.</span></div>
+      <p style="margin-top:6px">Studio per l'ospitalità indipendente &mdash; Napoli &amp; Capri</p>
+    </div>
+    <div style="text-align:right">
+      <p><a href="https://wa.me/390000000000">WhatsApp</a> &nbsp;&middot;&nbsp; <a href="mailto:ciao@diretto.it">ciao@diretto.it</a></p>
+      <p style="margin-top:6px">&copy; 2026 Diretto</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      var item=q.parentElement;
+      var a=item.querySelector('.faq-a');
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(o){
+        o.classList.remove('open');
+        o.querySelector('.faq-a').style.maxHeight=null;
+      });
+      if(!open){
+        item.classList.add('open');
+        a.style.maxHeight=a.scrollHeight+'px';
+      }
+    });
+  });
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+    });
+  },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el,i){
+    el.style.transitionDelay=(i%6*60)+'ms';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
