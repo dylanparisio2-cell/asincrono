@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200" shape-rendering="crispEdges">
+  <rect width="1200" height="1200" fill="#1a1a1a"/>
+  <text
+    x="600"
+    y="600"
+    font-family="ui-monospace,SFMono-Regular,'Courier New',monospace"
+    font-size="720"
+    font-weight="700"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >A</text>
+</svg>
