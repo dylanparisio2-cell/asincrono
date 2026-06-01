@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 // ROUTE NOT FOUND — ASINCRONO.CLOUD</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, 'Courier New', monospace;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      min-height: 100dvh;
+    }
+
+    .frame {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      letter-spacing: .12em;
+      color: #333;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+    .topbar .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #222;
+    }
+
+    /* error block */
+    .error-code {
+      font-size: clamp(40px, 10vw, 72px);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1;
+      color: #fff;
+    }
+    .error-label {
+      font-size: 13px;
+      letter-spacing: .1em;
+      color: #444;
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    /* divider */
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      margin: 36px 0;
+    }
+
+    /* trace table */
+    .trace {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 10px 16px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .trace .key {
+      color: #333;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      user-select: none;
+    }
+    .trace .val { color: #666; }
+    .trace .val.highlight { color: #fff; }
+
+    /* back link */
+    .back {
+      margin-top: 48px;
+      font-size: 13px;
+      color: #333;
+      letter-spacing: .02em;
+    }
+    .back::before { content: '_  '; color: #1a1a1a; }
+    .back a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+      padding-bottom: 1px;
+      transition: border-color .15s;
+    }
+    .back a:hover { border-color: #fff; }
+
+    /* bottom bar */
+    .bottombar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: #222;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame">
+
+    <div class="topbar">
+      <span>ASINCRONO.CLOUD // SYSTEM</span>
+      <span class="dot"></span>
+    </div>
+
+    <div class="error-code">ERROR_404</div>
+    <div class="error-label">// ROUTE NOT FOUND</div>
+
+    <hr />
+
+    <div class="trace">
+      <span class="key">STATUS</span>
+      <span class="val highlight">404 Page Not Found</span>
+
+      <span class="key">REQUEST</span>
+      <span class="val" id="js-path">—</span>
+
+      <span class="key">SERVER</span>
+      <span class="val">asincrono.cloud</span>
+
+      <span class="key">TIMESTAMP</span>
+      <span class="val" id="js-ts">—</span>
+    </div>
+
+    <div class="back">Torna alla <a href="/">home_page</a></div>
+
+  </div>
+
+  <div class="bottombar">ASINCRONO.CLOUD &nbsp;//&nbsp; AUTOMATION ENGINE</div>
+
+  <script>
+    document.getElementById('js-path').textContent = window.location.pathname;
+    document.getElementById('js-ts').textContent   = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+  </script>
+
+</body>
+</html>
